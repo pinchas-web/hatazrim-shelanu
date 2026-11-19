@@ -1,0 +1,87 @@
+/* התזרים שלנו: הצ׳אט, טבעת "כמה נשאר", פסים ותובנות. משתמש רק במשתני הסגנון, כך שכל סגנון עובד. */
+
+/* ---------- הצ׳אט ---------- */
+.tz-chat { padding: 14px; margin-top: 14px; display: grid; gap: 10px; }
+.tz-chat__who { display: inline-flex; justify-self: start; padding: 4px; gap: 4px; border-radius: 999px; background: var(--surface-2); }
+.tz-chat__who button { min-height: 36px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.tz-chat__who button.on { background: var(--surface); color: var(--text); box-shadow: 0 1px 4px rgb(0 0 0 / .12); }
+.tz-chat form { display: flex; gap: 8px; }
+.tz-chat input { flex: 1; min-width: 0; height: 56px; padding: 0 18px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--surface-2); color: var(--text); font: inherit; font-size: 17px; }
+.tz-chat input:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+.tz-chat .btn { width: 56px; min-height: 56px; padding: 0; flex: none; }
+.tz-chat .btn .i { width: 24px; height: 24px; }
+.tz-chat__hint { font-size: 14px; }
+.tz-log { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.tz-log li { padding: 10px 12px; border-radius: var(--radius); background: var(--surface-2); }
+.tz-log__row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tz-log__row b { font-size: 15.5px; }
+.tz-log__ok { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--c-green); color: #fff; flex: none; }
+.tz-log__ok .i { width: 15px; height: 15px; }
+.tz-amt { font-weight: 800; }
+.tz-amt.is-in { color: var(--c-green); }
+.tz-tag { min-height: 32px; padding: 0 12px; border: 1px dashed color-mix(in srgb, var(--accent) 55%, transparent); border-radius: 999px; background: transparent; color: var(--accent); font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; }
+[data-theme="bold-dark"] .tz-tag { color: var(--text); }
+.tz-x { margin-inline-start: auto; min-height: 32px; padding: 0 10px; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 13.5px; text-decoration: underline; cursor: pointer; }
+.tz-pick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tz-pick .chip-btn { height: 34px; font-size: 13px; }
+
+/* ---------- כמה נשאר ---------- */
+.tz-hero { margin-top: 14px; padding: 20px 16px 16px; display: grid; gap: 18px; justify-items: center; }
+.tz-ring { position: relative; width: min(250px, 72vw); aspect-ratio: 1; }
+.tz-ring svg { width: 100%; height: 100%; display: block; }
+.tz-ring__bg { fill: none; stroke: var(--surface-2); stroke-width: 16; }
+.tz-ring__fg { fill: none; stroke: var(--accent); stroke-width: 16; stroke-linecap: round; transition: stroke-dasharray .6s ease; }
+.tz-ring.is-bad .tz-ring__fg { stroke: var(--c-red); }
+.tz-ring__in { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; padding: 0 30px; }
+.tz-ring__in small { font-size: 14px; font-weight: 700; color: var(--muted); }
+.tz-ring__in b { font-family: var(--font-head); font-weight: var(--num-weight); font-size: 40px; line-height: 1.1; letter-spacing: -.5px; }
+.tz-ring.is-bad .tz-ring__in b { color: var(--c-red); }
+.tz-ring__in span { font-size: 13.5px; color: var(--muted); line-height: 1.35; }
+.tz-split { width: 100%; margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.tz-split div { padding: 10px 12px; border-radius: var(--radius); background: var(--surface-2); }
+.tz-split dt { font-size: 13px; font-weight: 700; color: var(--muted); }
+.tz-split dd { margin: 2px 0 0; font-size: 19px; font-weight: 800; text-align: right; }
+.tz-split small { display: block; font-size: 12px; color: var(--muted); }
+
+/* ---------- כרטיסי הנעה ---------- */
+.tz-cta { display: grid; gap: 4px; margin-top: 14px; padding: 16px; background: var(--hero); color: var(--on-hero); border-color: transparent; }
+.tz-cta b { font-size: 17px; }
+.tz-cta span { font-size: 14.5px; opacity: .85; }
+.tz-cta--soft { background: var(--surface); color: var(--text); border: 1.5px dashed color-mix(in srgb, var(--accent) 50%, var(--line)); }
+
+/* ---------- שורות עם פס ---------- */
+.tz-rows { padding: 6px 14px; display: grid; }
+.tz-rows--flat { padding: 0; }
+.tz-r { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "n v" "b b" "s s"; align-items: center; gap: 6px 10px; padding: 10px 0; border-bottom: 1px solid var(--line); color: inherit; text-decoration: none; }
+.tz-r:last-child { border-bottom: 0; }
+.tz-r > span:first-child { grid-area: n; font-weight: 700; font-size: 15px; }
+.tz-r > b { grid-area: v; font-size: 15px; }
+.tz-r > .tz-bar { grid-area: b; }
+.tz-r > small { grid-area: s; font-size: 12.5px; color: var(--muted); }
+.tz-r > .btn { grid-area: s; justify-self: start; min-height: 40px; }
+.tz-bar { display: block; height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.tz-bar i { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+.tz-bar.is-bad i { background: var(--c-red); }
+
+/* ---------- תובנות ---------- */
+.tz-tips { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.tz-tips li { display: grid; gap: 3px; padding: 12px 14px; border-radius: var(--radius); background: var(--surface-2); border-inline-start: 4px solid var(--accent); }
+.tz-tips b { font-size: 15.5px; }
+.tz-tips span { font-size: 14.5px; color: var(--muted); line-height: 1.45; }
+.tz-fore { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.tz-fore div { padding: 12px 10px; border-radius: var(--radius); background: var(--surface-2); text-align: center; }
+.tz-fore small { display: block; font-size: 12.5px; color: var(--muted); }
+.tz-fore b { font-family: var(--font-head); font-weight: var(--num-weight); font-size: 20px; color: var(--c-green); }
+.tz-fore b.is-bad { color: var(--c-red); }
+
+/* ---------- עדכון חודשי ---------- */
+.tz-step h3 { display: flex; align-items: center; gap: 10px; }
+.tz-step h3 em { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-style: normal; font-size: 15px; }
+.tz-step label.btn { justify-self: start; }
+.tz-stats { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.tz-stats li { padding: 8px 12px; border-radius: var(--radius); background: var(--surface-2); font-size: 14px; }
+.tz-stats b { margin-inline-end: 5px; font-size: 17px; }
+.tz-review .list { margin-top: 0; }
+.tz-review .btn-row { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.tz-safe { margin-top: 16px; text-align: center; font-size: 13.5px; }
+.tz-more { margin-top: 14px; }

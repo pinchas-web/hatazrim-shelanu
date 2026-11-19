@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>מבנה המערכת</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=Rubik:wght@800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink: #141B4D; --muted: #5E6690; --line: #E3E6F3; --bg: #F5F6FB; --accent: #F9B914; --teal: #0E7F8B; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Heebo', system-ui, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.55; }
+    h1, h2, h3 { font-family: 'Rubik', 'Heebo', sans-serif; font-weight: 900; margin: 0; line-height: 1.1; text-wrap: balance; }
+    p { margin: 0; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+    header { padding: 44px 0 30px; color: #fff; background: radial-gradient(900px 400px at 85% 0%, #2A3680, transparent 60%), var(--ink); }
+    .eyebrow { display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 14px; font-weight: 800; color: var(--ink); background: var(--accent); }
+    header h1 { font-size: clamp(32px, 5vw, 52px); margin-top: 14px; }
+    header p { margin-top: 10px; font-size: 19px; color: #D9DEF5; max-width: 62ch; }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .stats span { padding: 8px 16px; border-radius: 999px; background: rgb(255 255 255 / .1); border: 1px solid rgb(255 255 255 / .2); font-weight: 700; }
+    .stats b { font-family: 'Rubik'; font-weight: 900; color: var(--accent); margin-inline-end: 4px; }
+    section { padding: 36px 0 8px; }
+    .head { margin-bottom: 18px; }
+    .head small { display: block; font-size: 14px; font-weight: 800; color: var(--teal); margin-bottom: 6px; }
+    .head h2 { font-size: clamp(26px, 3.6vw, 38px); }
+    .head p { margin-top: 6px; color: var(--muted); }
+    .grid { display: grid; gap: 16px; }
+    .card { background: #fff; border-radius: 24px; box-shadow: 0 14px 34px rgb(26 35 102 / .08); padding: 20px; }
+    .table-card h3 { display: flex; align-items: center; gap: 10px; font-size: 22px; }
+    .table-card h3 .ico { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: #FFF4CC; }
+    .table-card .count { margin-inline-start: auto; font-family: 'Heebo'; font-size: 13px; font-weight: 700; color: var(--muted); }
+    .table-card > p { margin-top: 6px; color: var(--muted); font-size: 14.5px; }
+    .fields { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+    .fields li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-radius: 14px; background: var(--bg); }
+    .fields li b { font-weight: 700; }
+    .fields li b i { font-style: normal; color: #E5484D; }
+    .type { flex: none; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 800; color: #35469C; background: #E8EBFA; }
+    .opts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .opt { display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 700; background: #fff; border: 1px solid var(--line); }
+    .opt::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); }
+    .fields li.col { flex-direction: column; align-items: stretch; }
+    .fields li.col > div { display: flex; justify-content: space-between; gap: 10px; }
+    .rel { margin-top: 12px; font-size: 14px; font-weight: 700; color: var(--teal); }
+    .two { display: grid; gap: 16px; }
+    .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .list li { display: flex; gap: 12px; align-items: flex-start; }
+    .list li b { display: block; }
+    .list li span { color: var(--muted); font-size: 14.5px; }
+    .badge { flex: none; display: grid; place-items: center; min-width: 34px; height: 34px; padding: 0 10px; border-radius: 999px; font-weight: 800; font-size: 13px; color: var(--ink); background: #FFF4CC; }
+    .badge.later { color: var(--muted); background: var(--bg); }
+    .styles { display: grid; gap: 22px; }
+    .style { display: grid; justify-items: center; gap: 12px; padding: 22px 16px; position: relative; }
+    .style.rec { outline: 3px solid var(--accent); }
+    .style .tag { position: absolute; top: -14px; padding: 4px 14px; border-radius: 999px; font-size: 13px; font-weight: 800; background: var(--accent); }
+    .style h3 { font-size: 22px; }
+    .style p { color: var(--muted); font-size: 14.5px; text-align: center; max-width: 34ch; }
+    .phone { width: 300px; height: 620px; border-radius: 44px; padding: 10px; background: #0B0B10; box-shadow: 0 30px 60px rgb(20 27 77 / .25); }
+    .phone iframe { width: 390px; height: 836px; border: 0; transform: scale(.718); transform-origin: top right; background: #fff; }
+    .ico svg, .badge svg { width: 20px; height: 20px; }
+    .phone .screen { width: 280px; height: 600px; overflow: hidden; border-radius: 34px; }
+    .approve { margin: 36px 0 60px; padding: 26px; border-radius: 28px; color: var(--ink); background: linear-gradient(135deg, #FFD24D, #F9B914); }
+    .approve h2 { font-size: 28px; }
+    .approve p { margin-top: 8px; font-size: 18px; }
+    @media (min-width: 760px) { .grid { grid-template-columns: repeat(2, 1fr); } .two { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 1080px) { .grid { grid-template-columns: repeat(3, 1fr); } .styles { grid-template-columns: repeat(3, 1fr); } }
+  </style>
+  <script src="blueprint.js"></script>
+</head>
+<body>
+  <main id="bp"></main>
+  <script>
+  (function () {
+    const BP = window.BLUEPRINT;
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const TYPES = { text: 'טקסט', longtext: 'טקסט ארוך', phone: 'טלפון', email: 'מייל', number: 'מספר', money: 'סכום ₪', date: 'תאריך', datetime: 'תאריך ושעה', status: 'סטטוס', select: 'בחירה', checkbox: 'כן או לא', relation: 'קשר', photo: 'תמונה' };
+    const STYLE_INFO = {
+      'clean-pro': ['נקי ומקצועי', 'לבן ומסודר, עם כרטיס כהה למספר החשוב. מרגיש כמו כלי עבודה רציני.'],
+      'bold-dark': ['כהה ונועז', 'שחור עם צבע חזק, לוח עמודות שגוללים לרוחב. אנרגטי ומהיר לעבודה בשטח.'],
+      'soft-air': ['רך ואוורירי', 'גוונים רכים וכרטיסים שקופים. נעים לעין, מרגיש יוקרתי ושקט.'],
+      'photo-immersive': ['חווייתי ותמונתי', 'תמונה גדולה בראש המסך וזכוכית. מתאים לעסק שמוכר חוויה.'],
+      'playful-blocks': ['צבעוני ושמח', 'אריחים בצבעי פסטל ופינות עגולות. כיף לפתוח כל בוקר.'],
+      'school-soft': ['סגול ורך', 'לבנדר בהיר עם כרטיס סגול למספר החשוב ואריחים צבעוניים. ידידותי ומסודר.']
+    };
+    const T = id => BP.tables.find(t => t.id === id);
+    const fem = t => (t && t.gender) ? t.gender === 'f' : /ה$/.test((t && t.item) || '');
+    const g = (t, m, f) => (fem(t) ? f : m);
+    const opts = f => (f.options || []).map(o => typeof o === 'string' ? { v: o } : o);
+    const PATHS = {
+      users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18.2 14.6A6.5 6.5 0 0 1 21.5 20"/>',
+      wrench: '<path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L4 17l3 3 5.2-5.2a4 4 0 0 0 5.3-5.3l-2.5 2.5-2.5-2.5z"/>',
+      calendar: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+      box: '<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',
+      wallet: '<rect x="3" y="6" width="18" height="14" rx="3"/><path d="M16 13h2M3 10h18"/>',
+      list: '<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/>',
+      file: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h6"/>',
+      star: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',
+      person: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'
+    };
+    const svg = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PATHS[n] || PATHS.list}</svg>`;
+    const fieldsCount = BP.tables.reduce((a, t) => a + t.fields.length, 0);
+    const relations = BP.tables.flatMap(t => t.fields.filter(f => f.type === 'relation').map(f => ({ t, f })));
+    const styles = (BP.styleOptions && BP.styleOptions.length ? BP.styleOptions : [BP.style]).slice(0, 3);
+
+    document.title = 'מבנה המערכת · ' + BP.name;
+    document.getElementById('bp').innerHTML = `
+      <header><div class="wrap">
+        <span class="eyebrow">מבנה המערכת</span>
+        <h1>${esc(BP.name)}</h1>
+        <p>${esc(BP.purpose || '')}</p>
+        <div class="stats"><span><b>${BP.tables.length}</b>טבלאות</span><span><b>${fieldsCount}</b>שדות</span><span><b>${(BP.roles || []).length || 1}</b>תפקידים</span><span><b>${(BP.automations || []).length}</b>אוטומציות</span></div>
+      </div></header>
+
+      <section><div class="wrap">
+        <div class="head"><small>הנתונים</small><h2>מה המערכת שומרת</h2><p>כל טבלה היא רשימה במערכת. בתוך כל אחת, השדות שממלאים על כל פריט.</p></div>
+        <div class="grid">${BP.tables.map(t => `
+          <article class="card table-card">
+            <h3><span class="ico">${svg(t.icon)}</span>${esc(t.label)}<span class="count">${t.fields.length} שדות</span></h3>
+            <p>כל ${esc(t.item)} ברשימה מוצג לפי ${esc((t.fields.find(f => f.id === t.title) || {}).label || '')}${t.board ? ', ויש לוח עמודות לפי הסטטוס' : ''}.</p>
+            <ul class="fields">${t.fields.map(f => (f.type === 'status' || f.type === 'select') ? `
+              <li class="col"><div><b>${esc(f.label)}${f.required ? ' <i>*</i>' : ''}</b><span class="type">${TYPES[f.type]}</span></div>
+                <div class="opts">${opts(f).map(o => `<span class="opt" style="--c:${o.color ? `var(--c-${o.color})` : '#9AA0B8'}">${esc(o.v)}</span>`).join('')}</div></li>`
+              : `<li><b>${esc(f.label)}${f.required ? ' <i>*</i>' : ''}</b><span class="type">${f.type === 'relation' ? `קשר ל${esc(T(f.table).label)}` : TYPES[f.type] || f.type}</span></li>`).join('')}</ul>
+          </article>`).join('')}
+        </div>
+        ${relations.length ? `<p class="rel">${relations.map(({ t, f }) => `כל ${esc(t.item)} ${g(t, 'מחובר', 'מחוברת')} ל${esc(T(f.table).item)}, ובכרטיס של כל ${esc(T(f.table).item)} רואים את כל ה${esc(t.label)} ${g(T(f.table), 'שלו', 'שלה')}.`).join(' ')}</p>` : ''}
+      </div></section>
+
+      <section><div class="wrap two">
+        <div class="card">
+          <div class="head"><small>מסכים</small><h2>מה רואים</h2></div>
+          <ul class="list">
+            <li><span class="badge">1</span><div><b>דשבורד</b><span>${esc((BP.dashboard?.kpis || []).map(k => k.label).join(' · '))}${BP.dashboard?.focus ? ' · ' + esc(BP.dashboard.focus.label) : ''}${BP.dashboard?.upcoming ? ' · מה בימים הקרובים' : ''}</span></div></li>
+            ${BP.tables.map((t, i) => `<li><span class="badge">${i + 2}</span><div><b>${esc(t.label)}</b><span>רשימה עם חיפוש${t.board ? ', סינון לפי סטטוס ולוח עמודות' : ''}, כרטיס לכל ${esc(t.item)}, הוספה ועריכה</span></div></li>`).join('')}
+            <li><span class="badge">${BP.tables.length + 2}</span><div><b>הגדרות</b><span>שם, סגנון וצבע, ייצוא לאקסל${(BP.roles || []).length > 1 ? ', וניהול הצוות' : ''}</span></div></li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="head"><small>מי משתמש</small><h2>תפקידים</h2></div>
+          <ul class="list">${(BP.roles && BP.roles.length ? BP.roles : [{ label: 'בעל העסק', can: 'רואה ועורך הכל' }]).map(r => `<li><span class="badge">${svg('person')}</span><div><b>${esc(r.label)}</b><span>${esc(r.can)}</span></div></li>`).join('')}</ul>
+          ${(BP.automations || []).length ? `<div class="head" style="margin-top:22px"><small>אוטומציות</small><h2>מה קורה לבד</h2></div>
+          <ul class="list">${BP.automations.map(a => `<li><span class="badge ${a.status === 'פעיל' ? '' : 'later'}">${a.status === 'פעיל' ? '✓' : 'בהמשך'}</span><div><b>${esc(a.label)}</b></div></li>`).join('')}</ul>` : ''}
+        </div>
+      </div></section>
+
+      <section><div class="wrap">
+        <div class="head"><small>עיצוב</small><h2>שלושה סגנונות לבחירה</h2><p>כך תיראה המערכת שלך בכל אחד מהם. אפשר ללחוץ ולגלול בתוך כל טלפון.</p></div>
+        <div class="styles">${styles.map((s, i) => `
+          <div class="card style ${i === 0 ? 'rec' : ''}">
+            ${i === 0 ? '<span class="tag">מומלץ</span>' : ''}
+            <h3>${esc((STYLE_INFO[s] || [s])[0])}</h3>
+            <p>${esc((STYLE_INFO[s] || ['', ''])[1])}</p>
+            <div class="phone"><div class="screen"><iframe src="index.html?preview=1&theme=${encodeURIComponent(s)}" title="${esc((STYLE_INFO[s] || [s])[0])}" loading="lazy"></iframe></div></div>
+          </div>`).join('')}
+        </div>
+        <div class="approve"><h2>הכל נראה נכון?</h2><p>תגיד ל-Claude איזה סגנון בחרת, ומה להוסיף, להוריד או לשנות. אחרי האישור המערכת נבנית במלואה.</p></div>
+      </div></section>`;
+    // צבעי הסטטוסים זהים לאלה של המערכת
+    const st = document.documentElement.style;
+    Object.entries({ red: '#E5484D', orange: '#F76B15', yellow: '#E0A100', green: '#12A150', teal: '#0E9F9A', blue: '#3B6CF6', purple: '#8E4EC6', gray: '#8B8D98' }).forEach(([k, v]) => st.setProperty('--c-' + k, v));
+  })();
+  </script>
+</body>
+</html>
