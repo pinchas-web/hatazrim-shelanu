@@ -19,7 +19,7 @@ window.BLUEPRINT = {
 
   roles: [
     { id: 'owner', label: 'פנחס', can: 'רואה ועורך הכל' },
-    { id: 'member', label: 'בת הזוג', can: 'רואה ועורכת הכל, מהטלפון שלה' }
+    { id: 'member', label: 'בלומי', can: 'רואה ועורכת הכל, מהטלפון שלה' }
   ],
 
   tables: [
@@ -36,7 +36,7 @@ window.BLUEPRINT = {
         ] },
         { id: 'category', label: 'קטגוריה', type: 'relation', table: 'cats' },
         { id: 'date', label: 'תאריך', type: 'date', required: true },
-        { id: 'who', label: 'מי', type: 'select', options: ['פנחס', 'בת הזוג'] },
+        { id: 'who', label: 'מי', type: 'select', options: ['פנחס', 'בלומי'] },
         { id: 'source', label: 'מאיפה הגיע', type: 'select', options: ['צ׳אט', 'עו״ש לאומי', 'אשראי כאל', 'Claude', 'GPT', 'ידני'] },
         { id: 'fixed', label: 'הוצאה קבועה', type: 'checkbox' },
         { id: 'waste', label: 'סימנתי כמיותרת', type: 'checkbox' },
@@ -102,7 +102,7 @@ window.BLUEPRINT = {
     { label: 'מזהה מנויים, עמלות בנק, חריגות מהתקציב והוצאות שחוזרות', status: 'פעיל' },
     { label: 'מציעה תקציב לכל קטגוריה לפי הממוצע שלכם', status: 'פעיל' },
     { label: 'כתיבה דרך Claude ודרך GPT, ישר לאותו תזרים', status: 'בהמשך' },
-    { label: 'עובד משני הטלפונים, שלך ושל אשתך, עם אותם נתונים', status: 'בהמשך' }
+    { label: 'עובד משני הטלפונים, שלך ושל בלומי, עם אותם נתונים', status: 'פעיל' }
   ],
 
   publicForms: [],
@@ -125,14 +125,14 @@ window.BLUEPRINT = {
       { id: 'c-income', name: 'הכנסות', type: 'הכנסה', words: 'משכורת, שכר, הכנסה, קיבלתי, העברה מ, ביט מ, מענק, קצבה, קצבת ילדים, ביטוח לאומי, החזר מס, תשלום מלקוח' }
     ],
     tx: [
-      { id: 't1', desc: 'שופרסל', amount: 412, kind: 'הוצאה', category: 'c-food', date: 'today', who: 'בת הזוג', source: 'צ׳אט' },
+      { id: 't1', desc: 'שופרסל', amount: 412, kind: 'הוצאה', category: 'c-food', date: 'today', who: 'בלומי', source: 'צ׳אט' },
       { id: 't2', desc: 'דלק', amount: 250, kind: 'הוצאה', category: 'c-car', date: '-1d', who: 'פנחס', source: 'צ׳אט' },
       { id: 't3', desc: 'פיצה לארוחת ערב', amount: 118, kind: 'הוצאה', category: 'c-fun', date: '-2d', who: 'פנחס', source: 'צ׳אט', waste: true },
-      { id: 't4', desc: 'צהרון', amount: 650, kind: 'הוצאה', category: 'c-kids', date: '-4d', who: 'בת הזוג', source: 'עו״ש לאומי', fixed: true },
-      { id: 't5', desc: 'יין וחלות לשבת', amount: 96, kind: 'הוצאה', category: 'c-shabbat', date: '-5d', who: 'בת הזוג', source: 'צ׳אט' },
+      { id: 't4', desc: 'צהרון', amount: 650, kind: 'הוצאה', category: 'c-kids', date: '-4d', who: 'בלומי', source: 'עו״ש לאומי', fixed: true },
+      { id: 't5', desc: 'יין וחלות לשבת', amount: 96, kind: 'הוצאה', category: 'c-shabbat', date: '-5d', who: 'בלומי', source: 'צ׳אט' },
       { id: 't6', desc: 'נטפליקס', amount: 55, kind: 'הוצאה', category: 'c-comm', date: '-6d', who: 'פנחס', source: 'אשראי כאל', fixed: true },
       { id: 't7', desc: 'משכורת', amount: 9800, kind: 'הכנסה', category: 'c-income', date: '-8d', who: 'פנחס', source: 'צ׳אט' },
-      { id: 't8', desc: 'רמי לוי', amount: 687, kind: 'הוצאה', category: 'c-food', date: '-9d', who: 'בת הזוג', source: 'אשראי כאל' },
+      { id: 't8', desc: 'רמי לוי', amount: 687, kind: 'הוצאה', category: 'c-food', date: '-9d', who: 'בלומי', source: 'אשראי כאל' },
       { id: 't9', desc: 'עמלת פעולה בסניף', amount: 12, kind: 'הוצאה', category: 'c-misc', date: '-10d', who: 'פנחס', source: 'עו״ש לאומי' }
     ],
     fixed: [

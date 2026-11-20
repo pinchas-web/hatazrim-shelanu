@@ -618,29 +618,59 @@
   }
 
   // ---------- כניסה לענן ----------
-  function loadScript(src) {
-    return new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = src; s.onload = resolve; s.onerror = reject; document.head.append(s); });
+  function loadScript(src, integrity) {
+    return new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = src; if (integrity) { s.integrity = integrity; s.crossOrigin = 'anonymous'; } s.onload = resolve; s.onerror = reject; document.head.append(s); });
   }
-  function renderLogin() {
+  // כניסה בקוד חד-פעמי מהמייל (עובד גם מתוך האפליקציה שבמסך הבית), או בלחיצה על הקישור שבמייל
+  function renderLogin(msg) {
     root.innerHTML = `<div class="login"><form class="card" data-login>
-      <h1>${esc(BP.name)}</h1><p class="muted">נשלח לך קישור כניסה למייל. אין צורך בסיסמה.</p>
-      <div class="f"><label for="l-email">המייל שלך</label><input id="l-email" type="email" required dir="ltr" autocomplete="email"></div>
-      <button class="btn btn--primary" type="submit">שלחו לי קישור</button><p class="muted" data-login-note></p></form></div>`;
-    root.querySelector('[data-login]').addEventListener('submit', async e => {
+      <h1>${esc(BP.name)}</h1><p class="muted">${esc(msg || 'נשלח לך קוד כניסה למייל. אין צורך בסיסמה.')}</p>
+      <div class="f"><label for="l-email">המייל שלך</label><input id="l-email" type="email" required dir="ltr" autocomplete="email" inputmode="email"></div>
+      <div class="f" data-code hidden><label for="l-code">הקוד מהמייל</label><input id="l-code" type="text" dir="ltr" inputmode="numeric" autocomplete="one-time-code" maxlength="10" pattern="[0-9]{6,10}"></div>
+      <button class="btn btn--primary" type="submit" data-login-btn>שלחו לי קוד</button><p class="muted" data-login-note aria-live="polite"></p></form></div>`;
+    const form = root.querySelector('[data-login]');
+    const note = root.querySelector('[data-login-note]');
+    const btn = root.querySelector('[data-login-btn]');
+    const codeBox = root.querySelector('[data-code]');
+    let sentTo = '';
+    form.addEventListener('submit', async e => {
       e.preventDefault();
-      const email = root.querySelector('#l-email').value.trim();
-      const note = root.querySelector('[data-login-note]');
-      note.textContent = 'שולח...';
-      const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.href.split('#')[0] } });
-      note.textContent = error ? 'לא הצלחנו לשלוח. בדקו את המייל ונסו שוב.' : 'שלחנו קישור. פתחו את המייל ולחצו עליו.';
-    }, { once: true });
+      if (btn.disabled) return;
+      const email = root.querySelector('#l-email').value.trim().toLowerCase();
+      btn.disabled = true;
+      try {
+        if (sentTo && sentTo === email) {
+          const token = root.querySelector('#l-code').value.replace(/\D/g, '');
+          if (token.length < 6) { note.textContent = 'הקוד צריך להיות 6 ספרות לפחות.'; return; }
+          note.textContent = 'בודק...';
+          const { error } = await sb.auth.verifyOtp({ email, token, type: 'email' });
+          if (error) note.textContent = 'הקוד לא נכון או שפג תוקפו. אפשר לבקש קוד חדש.';
+          return;
+        }
+        note.textContent = 'שולח...';
+        const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.href.split('#')[0].split('?')[0] } });
+        if (error) {
+          note.textContent = /allowed|saving new user|signups/i.test(error.message || '') ? 'המייל הזה לא מורשה להיכנס לתזרים.'
+            : /rate|seconds|security purposes/i.test(error.message || '') ? 'שלחנו כבר קוד ממש עכשיו. חכו דקה ונסו שוב.'
+            : 'לא הצלחנו לשלוח. בדקו את המייל ונסו שוב.';
+          return;
+        }
+        sentTo = email;
+        codeBox.hidden = false;
+        btn.textContent = 'כניסה';
+        note.textContent = 'שלחנו קוד למייל. הקלידו אותו כאן, או לחצו על הקישור שבמייל.';
+        root.querySelector('#l-code').focus();
+      } finally { btn.disabled = false; }
+    });
+    root.querySelector('#l-email').addEventListener('input', () => { if (sentTo) { sentTo = ''; codeBox.hidden = true; btn.textContent = 'שלחו לי קוד'; note.textContent = ''; } });
   }
   async function loadLive() {
-    let { data: mem } = await sb.from('members').select('role, workspace:workspaces(id, name, settings)').limit(1);
-    if (!mem || !mem.length) {
-      const { error } = await sb.rpc('create_workspace', { p_name: BP.name });
-      if (error) throw error;
-      ({ data: mem } = await sb.from('members').select('role, workspace:workspaces(id, name, settings)').limit(1));
+    const { data: mem, error: memErr } = await sb.from('members').select('role, workspace:workspaces(id, name, settings)').limit(1);
+    if (memErr) throw memErr;
+    if (!mem || !mem.length || !mem[0].workspace) {
+      await sb.auth.signOut();
+      renderLogin('המייל הזה לא מורשה להיכנס לתזרים.');
+      return false;
     }
     ws = mem[0].workspace;
     DB.settings = ws.settings || {};
@@ -649,6 +679,8 @@
     DB.rows = {};
     for (const t of BP.tables) DB.rows[t.id] = [];
     for (const r of recs) (DB.rows[r.table_name] || (DB.rows[r.table_name] = [])).push({ ...r.data, id: r.id, created_at: r.created_at, updated_at: r.updated_at });
+    for (const t of BP.tables) DB.rows[t.id].sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+    return true;
   }
 
   // ---------- הפעלה ----------
@@ -664,11 +696,13 @@
     applyTheme();
     root.innerHTML = '<div class="login"><p class="muted">טוען...</p></div>';
     try {
-      await loadScript(SUPABASE_JS);
-      sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
+      await loadScript(SUPABASE_JS, 'sha384-GFr3yTh5lJznCbZfpTtXnwboFsxqtTQoeTZCRHhE0579KrRmlCzen5AA8ohaB5ug');
+      sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
       ({ data: { session } } = await sb.auth.getSession());
-      if (!session) { renderLogin(); sb.auth.onAuthStateChange((ev, s) => { if (ev === 'SIGNED_IN' && s) location.reload(); }); return; }
-      await loadLive();
+      if (!session) { renderLogin(); sb.auth.onAuthStateChange((ev, s) => { if (ev === 'SIGNED_IN' && s) location.replace(location.pathname); }); return; }
+      if (/[#&?](access_token|code)=/.test(location.href)) history.replaceState(null, '', location.pathname);
+      window.LAZY_USER_EMAIL = (session.user && session.user.email || '').toLowerCase();
+      if (!(await loadLive())) return;
       applyTheme();
       readyFns.forEach(fn => fn(helpers));
       render();

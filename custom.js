@@ -32,7 +32,8 @@
   const sum = (list, f = r => +r.amount || 0) => list.reduce((a, r) => a + f(r), 0);
 
   const ME_KEY = 'tazrim-me';
-  const me = () => { try { return localStorage.getItem(ME_KEY) || 'פנחס'; } catch { return 'פנחס'; } };
+  const byEmail = () => (window.LAZY_USER_EMAIL === '7145689b@gmail.com' ? 'בלומי' : 'פנחס');
+  const me = () => { try { const v = localStorage.getItem(ME_KEY); return v === 'פנחס' || v === 'בלומי' ? v : byEmail(); } catch { return byEmail(); } };
   const setMe = v => { try { localStorage.setItem(ME_KEY, v); } catch { /* בלי זיכרון */ } };
 
   // ---------- זיהוי קטגוריה ----------
@@ -147,7 +148,7 @@
     const log = chatLog.map(id => rows('tx').find(r => r.id === id)).filter(Boolean);
     const top = cats().filter(c => c.type !== 'הכנסה');
     return `<section class="card tz-chat">
-      <div class="tz-chat__who" role="group" aria-label="מי כותב">${['פנחס', 'בת הזוג'].map(w => `<button type="button" class="${w === who ? 'on' : ''}" data-tz-me="${esc(w)}">${esc(w)}</button>`).join('')}</div>
+      <div class="tz-chat__who" role="group" aria-label="מי כותב">${['פנחס', 'בלומי'].map(w => `<button type="button" class="${w === who ? 'on' : ''}" data-tz-me="${esc(w)}">${esc(w)}</button>`).join('')}</div>
       <form data-tz-chat autocomplete="off"><input name="q" type="text" enterkeyhint="send" placeholder="מה קניתם? למשל: שופרסל 340" aria-label="מה קניתם וכמה עלה"><button class="btn btn--primary" type="submit" aria-label="שליחה">${h.icon('check')}</button></form>
       <p class="muted tz-chat__hint">אפשר כמה בבת אחת: "דלק 250, פיצה 118 מיותר". הכנסה: "משכורת 9800".</p>
       ${log.length ? `<ul class="tz-log">${log.map(r => `<li>
@@ -244,7 +245,7 @@
     // תחזית ל-3 חודשים
     const avgVar = months.length ? months.reduce((a, k) => a + sum(rows('tx').filter(r => txMonth(r) === k && expense(r) && !r.fixed)), 0) / months.length : m.variable;
     const net = m.incomeExpected - m.fixedPlanned - m.goals - avgVar;
-    const who = ['פנחס', 'בת הזוג'].map(w => ({ w, v: sum(m.tx.filter(r => expense(r) && !r.fixed && r.who === w)) }));
+    const who = ['פנחס', 'בלומי'].map(w => ({ w, v: sum(m.tx.filter(r => expense(r) && !r.fixed && r.who === w)) }));
     return `${h.top('תובנות', monthName(m.key))}
       <section class="card set"><h3>לאן הלך הכסף החודש</h3>
         ${catRows.length ? `<div class="tz-rows tz-rows--flat">${catRows.map(x => `<a class="tz-r" href="#/t/cats/${esc(x.c.id)}"><span>${esc(x.c.name)}</span>${bar(x.v, max, x.b && x.v > x.b)}<b class="ltr">${esc(money(x.v))}</b>${x.b ? `<small>מתוך ${esc(money(x.b))}</small>` : x.a ? `<small>ממוצע ${esc(money(x.a))}</small>` : ''}</a>`).join('')}</div>` : '<p class="muted">עוד אין הוצאות החודש.</p>'}
@@ -270,7 +271,7 @@
 
   function loadXlsx() {
     if (window.XLSX) return Promise.resolve();
-    return new Promise((res, rej) => { const s = document.createElement('script'); s.src = XLSX_JS; s.onload = res; s.onerror = () => rej(new Error('לא הצלחתי לטעון את קורא הקבצים. בדקו את האינטרנט.')); document.head.append(s); });
+    return new Promise((res, rej) => { const s = document.createElement('script'); s.src = XLSX_JS; s.integrity = 'sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw'; s.crossOrigin = 'anonymous'; s.onload = res; s.onerror = () => rej(new Error('לא הצלחתי לטעון את קורא הקבצים. בדקו את האינטרנט.')); document.head.append(s); });
   }
   function toDate(v) {
     if (v instanceof Date && !isNaN(v)) return v;

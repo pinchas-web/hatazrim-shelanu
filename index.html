@@ -2,6 +2,9 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="utf-8">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#F4F5F7">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,11 +19,10 @@
   <link rel="stylesheet" href="custom.css">
   <script src="config.js"></script>
   <script src="blueprint.js"></script>
-  <script>document.title = (window.BLUEPRINT && window.BLUEPRINT.name) || 'מערכת';</script>
 </head>
 <body>
   <div id="app"></div>
   <script src="app.js"></script>
-  <script src="custom.js" onerror="this.remove()"></script>
+  <script src="custom.js"></script>
 </body>
 </html>
